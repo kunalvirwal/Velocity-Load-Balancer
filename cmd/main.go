@@ -11,23 +11,27 @@ import (
 
 func main() {
 	servers := []server.Servers{
-		server.CreateServer("https://www.duckduckgo.com"),
-		server.CreateServer("https://www.facebook.com"),
-		server.CreateServer("https://www.bing.com"),
+		server.CreateServer("http://localhost:8001"),
+		server.CreateServer("http://localhost:8002"),
+		server.CreateServer("http://localhost:8003"),
 	}
 
-	lb := balancer.CreateLoadBalancers(8000, servers)
+	BalancingAlgorythm := "LeastConnections" // "RoundRobin"  // Possible values present is ./internal/utils/utils.go
 
-	fmt.Println(lb.Port())
+	lb := balancer.CreateLoadBalancers(BalancingAlgorythm, 8000, servers)
 
 	handleRedirect := func(rw http.ResponseWriter, req *http.Request) {
 		lb.ServeProxy(rw, req)
 	}
 
-	// register a proxy handler to handle all requests
-	http.HandleFunc("/", handleRedirect)
+	if lb == nil {
+		fmt.Println("Invalid Balancing Algorythm chosen")
+	} else {
+		// register a proxy handler to handle all requests
+		http.HandleFunc("/", handleRedirect)
 
-	fmt.Println("serving requests at localhost: ", (lb.Port()))
-	http.ListenAndServe(":"+strconv.Itoa(lb.Port()), nil)
+		fmt.Println(BalancingAlgorythm, "loadbalancer serving requests at localhost:", (lb.Port()))
+		http.ListenAndServe(":"+strconv.Itoa(lb.Port()), nil)
+	}
 
 }

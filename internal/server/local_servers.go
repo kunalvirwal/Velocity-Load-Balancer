@@ -3,14 +3,14 @@ package server
 import (
 	"net/http"
 	"net/http/httputil"
-	"net/url"
-
-	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/utils"
+	"sync"
 )
 
 type Server struct {
-	address string
-	proxy   *httputil.ReverseProxy
+	address           string
+	proxy             *httputil.ReverseProxy
+	activeConnections int
+	mu                sync.Mutex
 }
 
 // server functions
@@ -27,13 +27,23 @@ func (s *Server) Serve(w http.ResponseWriter, r *http.Request) {
 	s.proxy.ServeHTTP(w, r)
 }
 
-func CreateServer(URL string) *Server {
-	serverURL, err := url.Parse(URL)
-	utils.CheckNilErr(err, "Unable to parse url")
+// Gets the no of active connections
+func (s *Server) ActiveConnections() int {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.activeConnections
+}
 
-	return &Server{
-		address: URL,
-		proxy:   httputil.NewSingleHostReverseProxy(serverURL),
-	}
+// Increments the no of active connections
+func (s *Server) IncrementConnections() {
+	s.mu.Lock()
+	s.activeConnections++
+	s.mu.Unlock()
+}
 
+// Decrements the no of active connections
+func (s *Server) DecrementConnections() {
+	s.mu.Lock()
+	s.activeConnections--
+	s.mu.Unlock()
 }
