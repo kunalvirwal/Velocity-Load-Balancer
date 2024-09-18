@@ -3,9 +3,12 @@ package balancer
 import (
 	"fmt"
 	"net/http"
+	"sync"
 
 	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/server"
 )
+
+var mu sync.Mutex
 
 type RRLoadBalancer struct {
 	port            int
@@ -19,14 +22,17 @@ func (lb *RRLoadBalancer) Port() int {
 
 func (lb *RRLoadBalancer) GetNextAvailableServer() server.Servers {
 
+	mu.Lock()
 	server := lb.servers[(lb.RoundRobinCount)%len(lb.servers)]
 
 	for !server.IsAlive() {
 		lb.RoundRobinCount++
 		server = lb.servers[(lb.RoundRobinCount)%len(lb.servers)]
 	} // TODO: Implement gracefull 503 responses if all servers down
-
 	lb.RoundRobinCount++
+
+	mu.Unlock()
+
 	return server
 }
 

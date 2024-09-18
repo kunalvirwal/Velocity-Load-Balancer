@@ -16,7 +16,7 @@ func main() {
 		server.CreateServer("http://localhost:8003"),
 	}
 
-	BalancingAlgorythm := "LeastConnections" // "RoundRobin"  // Possible values present is ./internal/utils/utils.go
+	BalancingAlgorythm := "RoundRobin" // "LeastConnections" // Possible values present is ./internal/utils/utils.go
 
 	lb := balancer.CreateLoadBalancers(BalancingAlgorythm, 8000, servers)
 

@@ -66,3 +66,5 @@ go-load-balancer/
 ├── go.mod                       # Go module file
 ├── go.sum                       # Go dependencies checksum file
 └── README.md                    # Project documentation
+
+bombardier -c 125 -n 1000 http://localhost:8000
