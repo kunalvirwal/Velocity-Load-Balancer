@@ -10,13 +10,13 @@ import (
 
 type Servers interface {
 
-	// gives url of server
+	// Gives url of server
 	Address() string
 
-	// checks if the server is responding
+	// Checks if the server is responding
 	IsAlive() bool
 
-	// serves the http request
+	// Serves the http request
 	Serve(w http.ResponseWriter, r *http.Request)
 
 	// Gets the no of active connections
@@ -27,6 +27,9 @@ type Servers interface {
 
 	// Decrements the no of active connections
 	DecrementConnections()
+
+	// Sets the health status of a server
+	SetHealth(bool)
 }
 
 func CreateServer(URL string) Servers { // TODO: Modify this function to accept type of server to create if needed
@@ -34,9 +37,10 @@ func CreateServer(URL string) Servers { // TODO: Modify this function to accept 
 	utils.CheckNilErr(err, "Unable to parse url")
 
 	return &Server{
-		address:           URL,
+		address:           serverURL.Host,
 		proxy:             httputil.NewSingleHostReverseProxy(serverURL),
 		activeConnections: 0,
+		health:            true,
 	}
 
 }
