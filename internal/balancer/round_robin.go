@@ -20,6 +20,10 @@ func (lb *RRLoadBalancer) Port() int {
 	return lb.port
 }
 
+func (lb *RRLoadBalancer) GetAlgorythm() string {
+	return "RoundRobin"
+}
+
 func (lb *RRLoadBalancer) GetNextAvailableServer() server.Servers {
 
 	mu.Lock()

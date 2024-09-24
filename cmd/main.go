@@ -6,40 +6,58 @@ import (
 	"strconv"
 
 	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/balancer"
+	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/config"
 	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/healthcheck"
 	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/server"
 )
 
 func main() {
-	servers := []server.Servers{
-		server.CreateServer("http://localhost:8001"),
-		// server.CreateServer("http://localhost:8002"),
-		// server.CreateServer("http://localhost:8003"),
+
+	config.GetConfigs() // TODO : Implement global error handeling for invalid yaml
+	const PORT = 8000
+	var allServers []server.Servers
+	LB := make(map[string]balancer.LoadBalancers)
+
+	for _, service := range config.Cfgs.Services {
+		fmt.Println(service.TargetURLs)
+		BalancingAlgorythm := service.Algorythm
+		var servers []server.Servers
+		for _, url := range service.TargetURLs {
+			servers = append(servers, server.CreateServer(url))
+			allServers = append(allServers, server.CreateServer(url)) // TODO : can implement selective health checks here
+		}
+		lb := balancer.CreateLoadBalancers(BalancingAlgorythm, PORT, servers) // "RoundRobin" // "LeastConnections" // Possible values present is ./internal/utils/utils.go
+		if lb == nil {
+			panic("Invalid balancing algorythm, nil load balancer recieved")
+		}
+		go healthcheck.HealthCheck(servers)
+		LB[service.Domain] = lb
 	}
 
-	BalancingAlgorythm := "RoundRobin" // "LeastConnections" // Possible values present is ./internal/utils/utils.go
-
-	lb := balancer.CreateLoadBalancers(BalancingAlgorythm, 8000, servers)
-
 	handleRedirect := func(rw http.ResponseWriter, req *http.Request) {
-
+		domain := req.Host
+		lb, exist := LB[domain]
+		if !exist {
+			http.Error(rw, "Service not found", http.StatusNotFound)
+			fmt.Println("A request with unrecognised domain recieved, please update config.yml file or DNS ")
+			return
+		}
 		lb.ServeProxy(rw, req)
 	}
 
-	go healthcheck.HealthCheck(servers)
+	go healthcheck.HealthCheck(allServers)
 
-	if lb == nil {
-		fmt.Println("Invalid Balancing Algorythm chosen")
-	} else {
-		// register a proxy handler to handle all requests
-		http.HandleFunc("/", handleRedirect)
+	// register a proxy handler to handle all requests
+	http.HandleFunc("/", handleRedirect)
 
-		fmt.Println(BalancingAlgorythm, "loadbalancer serving requests at localhost:", (lb.Port()))
-		err := http.ListenAndServe(":"+strconv.Itoa(lb.Port()), nil)
-		if err != nil {
-			fmt.Println(err)
-		}
+	for domain, lb := range LB {
+		fmt.Println(lb.GetAlgorythm(), "loadbalancer serving requests at localhost:", (lb.Port()), "for the domain", (domain))
+	}
 
+	// TODO : run this (v) code only for distinct, it is possible that multiple lb run on same or different ports. Replace the hard coded 8000 port by lb.Port()
+	err := http.ListenAndServe(":"+strconv.Itoa(PORT), nil)
+	if err != nil {
+		fmt.Println(err)
 	}
 
 }

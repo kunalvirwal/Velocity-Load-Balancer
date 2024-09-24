@@ -1,9 +1,15 @@
 services:
-  - domain: "shul"
+  - domain: "shul:8000"
     targetURLs:
       - "http://localhost:8001"
       - "http://localhost:8002"
       - "http://localhost:8003"
-    algorythm: "RoundRobin"
+    algorythm: "LeastConnections"
 
+  - domain: "shul2:8000"
+    targetURLs:
+      - "http://localhost:8001"
+      - "http://localhost:8002"
+      # - "http://localhost:8003"
+    algorythm: "RoundRobin"
   

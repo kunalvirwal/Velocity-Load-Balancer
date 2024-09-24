@@ -17,6 +17,9 @@ type LoadBalancers interface {
 
 	// forwards the request to the next server
 	ServeProxy(w http.ResponseWriter, r *http.Request)
+
+	// gets the algorythm being used by that load balancer
+	GetAlgorythm() string
 }
 
 // create a new load baklancer instance

@@ -16,28 +16,27 @@ func (lb *LCLoadBalancer) Port() int {
 	return lb.port
 }
 
-func (lb *LCLoadBalancer) GetNextAvailableServer() server.Servers {
+func (lb *LCLoadBalancer) GetAlgorythm() string {
+	return "LeastConnections"
+}
 
+func (lb *LCLoadBalancer) GetNextAvailableServer() server.Servers {
 	i := 0 // iterator to find first active server
 	server := lb.servers[i]
-
 	for !server.IsAlive() {
 		i++
 		if i == len(lb.servers) {
 			// time.Sleep(1 * time.Second) // timeout to retry to check if any of the server comes alive
 			// i = 0
 			return nil
-
 		}
 		server = lb.servers[i]
 	}
-
 	for _, backend := range lb.servers {
 		if backend.IsAlive() && (backend.ActiveConnections() < server.ActiveConnections()) {
 			server = backend
 		}
 	}
-
 	return server
 }
 
