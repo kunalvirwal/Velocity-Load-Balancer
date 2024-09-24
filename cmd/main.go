@@ -13,7 +13,7 @@ import (
 func main() {
 	servers := []server.Servers{
 		server.CreateServer("http://localhost:8001"),
-		server.CreateServer("http://localhost:8002"),
+		// server.CreateServer("http://localhost:8002"),
 		// server.CreateServer("http://localhost:8003"),
 	}
 
@@ -22,6 +22,7 @@ func main() {
 	lb := balancer.CreateLoadBalancers(BalancingAlgorythm, 8000, servers)
 
 	handleRedirect := func(rw http.ResponseWriter, req *http.Request) {
+
 		lb.ServeProxy(rw, req)
 	}
 
@@ -34,7 +35,10 @@ func main() {
 		http.HandleFunc("/", handleRedirect)
 
 		fmt.Println(BalancingAlgorythm, "loadbalancer serving requests at localhost:", (lb.Port()))
-		http.ListenAndServe(":"+strconv.Itoa(lb.Port()), nil)
+		err := http.ListenAndServe(":"+strconv.Itoa(lb.Port()), nil)
+		if err != nil {
+			fmt.Println(err)
+		}
 
 	}
 

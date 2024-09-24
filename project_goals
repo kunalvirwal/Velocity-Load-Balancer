@@ -26,9 +26,9 @@ II
 	1) Sticky Round Robin
 	2) IP/Url Hash
 
-
-III
--Path based server routing
+127.0.0.1		localhost
+::1			localhost
+127.0.1.1		shul.localdomain	shul
 -Dashboard for load visualization or can integrate Prometheus
 -Reverse proxy Graceful Shutdown
 -Timeouts
@@ -68,3 +68,5 @@ go-load-balancer/
 └── README.md                    # Project documentation
 
 bombardier -c 125 -n 1000 http://localhost:8000
+
+To test multi-redirection modify /etc/hosts to have many domain names point to the same url localhost
