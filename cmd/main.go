@@ -23,14 +23,16 @@ func main() {
 		BalancingAlgorythm := service.Algorythm
 		var servers []server.Servers
 		for _, url := range service.TargetURLs {
-			servers = append(servers, server.CreateServer(url))
-			allServers = append(allServers, server.CreateServer(url)) // TODO : can implement selective health checks here
+			server_instance := server.CreateServer(url)
+			servers = append(servers, server_instance)
+			allServers = append(allServers, server_instance) // TODO : can implement selective health checks here
 		}
+		// fmt.Println(servers)
+		// fmt.Println(allServers)
 		lb := balancer.CreateLoadBalancers(BalancingAlgorythm, PORT, servers) // "RoundRobin" // "LeastConnections" // Possible values present is ./internal/utils/utils.go
 		if lb == nil {
 			panic("Invalid balancing algorythm, nil load balancer recieved")
 		}
-		go healthcheck.HealthCheck(servers)
 		LB[service.Domain] = lb
 	}
 

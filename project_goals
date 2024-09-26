@@ -1,16 +1,16 @@
-It should be software based 
-It should be written in Golang ( use Go routines for parallelism)
-It should be able to manage all local and global servers and containers
+It should be software based :Done
+It should be written in Golang ( use Go routines for parallelism) :Done
+It should be able to manage all local and global servers and containers :Done
 lightweight
 
 
 I
--It should be configurable via a config file
+-It should be configurable via a config file :Done
 -It should have:
-	1) round robin (normal and weighted)
-	2) Least Connections
+	1) round robin (normal and weighted) :Done
+	2) Least Connections :Done
 -Circuit breaker 
--Health Checks for if the server is down [ HTTPS pings or health endpints or TCP connections (probably) ] 
+-Health Checks for if the server is down [ HTTPS pings or health endpints or TCP connections (probably) ] :Done
 -Rate limiting [ IP address and end point ]
 -Hot Addition and removal of servers [ REST API interface (we'll see) ]
 -Loging and monitoring ( access logs like response times, status codes,... can store into a database)
@@ -68,5 +68,6 @@ go-load-balancer/
 └── README.md                    # Project documentation
 
 bombardier -c 125 -n 1000 http://localhost:8000
+CompileDaemon -build="go build -o main ./cmd/main.go" -command="./main"
 
 To test multi-redirection modify /etc/hosts to have many domain names point to the same url localhost

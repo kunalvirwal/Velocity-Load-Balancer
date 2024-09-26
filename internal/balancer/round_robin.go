@@ -26,10 +26,15 @@ func (lb *RRLoadBalancer) GetAlgorythm() string {
 
 func (lb *RRLoadBalancer) GetNextAvailableServer() server.Servers {
 
+	// for _, name := range lb.servers {
+	// 	// fmt.Println(name.Address(), name.IsAlive())
+	// }
+
 	mu.Lock()
 	server := lb.servers[(lb.RoundRobinCount)%len(lb.servers)]
-
+	fmt.Println(*lb)
 	for !server.IsAlive() {
+		// fmt.Println(server.IsAlive())
 		lb.RoundRobinCount++
 		server = lb.servers[(lb.RoundRobinCount)%len(lb.servers)]
 	} // TODO: Implement gracefull 503 responses if all servers down

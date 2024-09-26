@@ -1,7 +1,6 @@
 package balancer
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/server"
@@ -42,11 +41,13 @@ func (lb *LCLoadBalancer) GetNextAvailableServer() server.Servers {
 
 func (lb *LCLoadBalancer) ServeProxy(w http.ResponseWriter, r *http.Request) {
 	targetServer := lb.GetNextAvailableServer()
+
 	if targetServer == nil { // can redirect to a fallback server
 		http.Error(w, "Service Unavailable: No healthy servers available", http.StatusServiceUnavailable)
 	}
 	targetServer.IncrementConnections()
-	fmt.Println("Request forwarded to:", targetServer.Address())
+	// fmt.Println(targetServer.Address())
+	// fmt.Println("Request forwarded to:", targetServer.Address())
 	targetServer.Serve(w, r)
 	targetServer.DecrementConnections()
 }

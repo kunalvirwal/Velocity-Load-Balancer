@@ -7,12 +7,21 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
 var port string
 var t float64
-var conn = 0
+
+type Conn struct {
+	qty int
+	mu  sync.RWMutex
+}
+
+var conn Conn = Conn{
+	qty: 0,
+}
 
 func main() {
 
@@ -49,8 +58,10 @@ func main() {
 }
 
 func getSlash(w http.ResponseWriter, r *http.Request) {
-	conn++
-	fmt.Println(strconv.Itoa(conn), "Got request on:", port)
+	conn.mu.Lock()
+	conn.qty++
+	fmt.Println(strconv.Itoa(conn.qty), "Got request on:", port)
+	conn.mu.Unlock()
 	time.Sleep(time.Duration(t) * time.Second)
 	w.WriteHeader(http.StatusOK)
 }

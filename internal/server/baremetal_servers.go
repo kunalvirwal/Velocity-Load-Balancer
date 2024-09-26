@@ -27,7 +27,7 @@ func (s *Server) IsAlive() bool {
 }
 
 func (s *Server) Serve(w http.ResponseWriter, r *http.Request) {
-	s.proxy.ServeHTTP(w, r)
+	s.proxy.ServeHTTP(w, r) // TODO : add gracefull redirection on err
 }
 
 // Gets the no of active connections
