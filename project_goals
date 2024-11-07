@@ -13,7 +13,7 @@ I
 -Health Checks for if the server is down [ HTTPS pings or health endpints or TCP connections (probably) ] :Done
 -Rate limiting [ IP address and end point ]
 -Hot Addition and removal of servers [ REST API interface (we'll see) ]
--Loging and monitoring ( access logs like response times, status codes,... can store into a database)
+-Loging and monitoring ( access logs like response times, status codes,... can store into a database like a mongo alpine container)
 
 
 II
