@@ -1,15 +1,14 @@
+# The names shul and shul2 are like different services' url domain names, requests to which are redirected to their respective targetURLs: 
 services:
-  - domain: "shul:8000"
+  - domain: "shul"
     targetURLs:
       - "http://localhost:8001"
       - "http://localhost:8002"
-      # - "http://localhost:8003"
     algorythm: "RoundRobin"
 
-  # - domain: "shul2:8000"
-  #   targetURLs:
-  #     - "http://localhost:8001"
-  #     - "http://localhost:8002"
-  #     # - "http://localhost:8003"
-  #   algorythm: "RoundRobin"
-  
+- domain: "shul2"
+  targetURLs:
+    - "http://localhost:8003"
+    - "http://localhost:8004"
+    - "http://localhost:8005"
+  algorythm: "LeastConnections"

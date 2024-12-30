@@ -38,7 +38,7 @@ func main() {
 
 	handleRedirect := func(rw http.ResponseWriter, req *http.Request) {
 		domain := req.Host
-		lb, exist := LB[domain]
+		lb, exist := LB[domain] // Get the load balancer for this service
 		if !exist {
 			http.Error(rw, "Service not found", http.StatusNotFound)
 			fmt.Println("A request with unrecognised domain recieved, please update config.yml file or DNS ")

@@ -32,7 +32,7 @@ func (lb *RRLoadBalancer) GetNextAvailableServer() server.Servers {
 
 	mu.Lock()
 	server := lb.servers[(lb.RoundRobinCount)%len(lb.servers)]
-	fmt.Println(*lb)
+	// fmt.Println(*lb)
 	for !server.IsAlive() {
 		// fmt.Println(server.IsAlive())
 		lb.RoundRobinCount++

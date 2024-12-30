@@ -36,7 +36,7 @@ func CreateServer(URL string) Servers { // TODO: Modify this function to accept 
 	serverURL, err := url.Parse(URL)
 	utils.CheckNilErr(err, "Unable to parse url")
 
-	return &Server{
+	return &Baremetal_Server{
 		address:           serverURL.Host,
 		proxy:             httputil.NewSingleHostReverseProxy(serverURL),
 		activeConnections: 0,

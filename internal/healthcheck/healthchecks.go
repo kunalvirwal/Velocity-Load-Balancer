@@ -13,14 +13,14 @@ func HealthCheck(servers []server.Servers) {
 
 	// to start the health checks instantaneously
 	for _, server := range servers {
-		runHealthChecks(server)
+		go runHealthChecks(server)
 		// fmt.Println(server.IsAlive())
 
 	}
 
 	for range ticker.C {
 		for _, server := range servers {
-			runHealthChecks(server)
+			go runHealthChecks(server)
 			// fmt.Println(server.IsAlive())
 		}
 	}
@@ -39,6 +39,7 @@ func runHealthChecks(server server.Servers) {
 		}
 		return
 	}
+
 	defer conn.Close()
 
 	if !server.IsAlive() {
