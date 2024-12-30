@@ -1,11 +1,12 @@
 ```
-####################################################  
-#		 _   __    __         _ __      		   #  
-#		| | / /__ / /__  ____(_) /___ __		   #  
-#		| |/ / -_) / _ \/ __/ / __/ // /		   #  
-#		|___/\__/_/\___/\__/_/\__/\_, / 		   #  
-#		                         /___/  		   #  
-####################################################  
+			####################################################  
+			#	 _   __    __         _ __     		   #  
+			#	| | / /__ / /__  ____(_) /___ __	   #  
+			#	| |/ / -_) / _ \/ __/ / __/ // /	   #  
+			#	|___/\__/_/\___/\__/_/\__/\_, /		   #  
+			#	                         /___/ 		   #  
+			####################################################  
+
 ```
 
 # About
@@ -110,6 +111,18 @@ Tip: To test multi-redirection modify your `/etc/hosts` to have many custom doma
 
 # Testing
 
-![Round Robin Algorythm tests](./Readme_Assets/RoundRobin.png)  
+<p align=center>
+Round Robin Algorythm tests
+</p>
+
+![Round Robin Algorythm tests](./Readme_Assets/RoundRobin.png)   
+
+<p align=center>  
+Least Connections Algorythm tests  
+</p>
 
 ![Least Connections Algorythm tests](./Readme_Assets/LeastConnections.png)  
+
+<p align=center>
+Made with ❤️ by Kunal
+</p>
