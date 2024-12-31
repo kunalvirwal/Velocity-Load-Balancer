@@ -9,17 +9,17 @@ import (
 	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/utils"
 )
 
-func HealthCheck(servers []server.Servers) {
+func HealthCheck(servers *[]server.Servers) {
 	ticker := time.NewTicker(10 * time.Second)
 
 	// to start the health checks instantaneously
-	for _, server := range servers {
+	for _, server := range *servers {
 		go runHealthChecks(server)
 	}
 
 	for range ticker.C {
-		for _, server := range servers {
-			go runHealthChecks(server)
+		for _, server := range *servers {
+			go runHealthChecks(server) // TODO : can implement selective health checks here
 		}
 	}
 }

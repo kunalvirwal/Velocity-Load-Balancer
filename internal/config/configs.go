@@ -22,7 +22,8 @@ type Service struct {
 	Algorythm  string   `yaml:"algorythm"`
 }
 
-func GetConfigs() {
+// GetConfigs reads the configurations from the config.yml file
+func GetConfigs() { // TODO : Implement global error handeling for invalid yaml
 	f, err := os.Open(configurations)
 	if err != nil {
 		panic(err)

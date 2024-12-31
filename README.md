@@ -31,10 +31,10 @@ It currently has Health Checks and removal of servers for if the server is down 
 ✅ It should have:  
 	1) round robin (normal and weighted) :Done   
 	2) Least Connections :Done  
-✅ Health Checks for if the server is down [ ✅TCP connections or HTTPS pings or health endpints ] :Done  
+✅ Health Checks for if the server is down add or remove it from rotation [ ✅TCP connections or HTTPS pings or health endpints ] :Done  
+🚧 REST API interface for Hot Addition and removal of servers   
+✅ Proper Logging and monitoring ( access logs like forwards, healthchecks, request drops, status codes,... 🚧can store into a database like a mongo alpine container)  
 Rate limiting [ IP address and end point ]  
-Hot Addition and removal of servers [ ✅Via HealthChecks and 🚧Via REST API interface (we'll see) ]  
-✅ Loging and monitoring ( access logs like forwards, healthchecks, request drops, status codes,... 🚧can store into a database like a mongo alpine container)  
 
 
 ## 🚧Phase II :Prod level  
@@ -72,7 +72,6 @@ Load_Balancer/
 │   │   └── healthcheck.go        # Health checking logic for backends  
 │   ├── server/  
 │   │   ├── server.go             # Server logic, like adding, removing, and selecting servers  
-│   │   └── 🚧docker_server.go    # Server handling for Docker containers  
 │   │   └── baremetal_server.go   # Server handling for bare metal servers  
 │   └── utils/    
 │       ├── utils.go			  # Utility functions like Error Handling etc.    
