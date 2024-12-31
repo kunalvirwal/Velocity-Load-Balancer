@@ -1,14 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
-
-	"github.com/joho/godotenv"
 )
 
 var port string
@@ -26,30 +26,30 @@ var conn Conn = Conn{
 func main() {
 
 	//////////////////////////////////////////////For Dynamic Input
-	// reader := bufio.NewReader(os.Stdin)
-	// fmt.Print("Enter port no. to start test server on: ")
-	// inp, _ := reader.ReadString('\n')
-	// port = strings.TrimSpace(inp)
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter port no. to start test server on: ")
+	inp, _ := reader.ReadString('\n')
+	port = strings.TrimSpace(inp)
 	///////////////////////////////////////////////For .env and containers
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading .env file")
-	}
-	port = os.Getenv("PORT")
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	fmt.Println("Error loading .env file")
+	// }
+	// port = os.Getenv("PORT")
 	////////////////////////////////////////////////
 
-	_, err = strconv.Atoi(port)
+	_, err := strconv.Atoi(port)
 	if err != nil {
 		fmt.Println(port, "is not a valid port number", err)
 		return
 	}
 
 	//////////////////////////////////////////////For Dynamic Input
-	// fmt.Print("Enter server duration to respond: ")
-	// dur, _ := reader.ReadString('\n')
-	// dur = strings.TrimSpace(dur)
+	fmt.Print("Enter server duration to respond: ")
+	dur, _ := reader.ReadString('\n')
+	dur = strings.TrimSpace(dur)
 	///////////////////////////////////////////////For .env and containers
-	dur := os.Getenv("DURATION")
+	// dur := os.Getenv("DURATION")
 	////////////////////////////////////////////////
 
 	t, err = strconv.ParseFloat(dur, 32)

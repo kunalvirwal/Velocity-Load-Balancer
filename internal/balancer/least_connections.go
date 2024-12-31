@@ -1,14 +1,19 @@
 package balancer
 
 import (
+	"fmt"
 	"net/http"
+	"sync"
 
 	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/server"
+	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/utils"
 )
 
 type LCLoadBalancer struct {
+	domain  string
 	port    int
 	servers []server.Servers
+	mu      sync.Mutex
 }
 
 func (lb *LCLoadBalancer) Port() int {
@@ -20,13 +25,14 @@ func (lb *LCLoadBalancer) GetAlgorythm() string {
 }
 
 func (lb *LCLoadBalancer) GetNextAvailableServer() server.Servers {
+	lb.mu.Lock()
+	defer lb.mu.Unlock()
 	i := 0 // iterator to find first active server
 	server := lb.servers[i]
 	for !server.IsAlive() {
 		i++
-		if i == len(lb.servers) {
-			// time.Sleep(1 * time.Second) // timeout to retry to check if any of the server comes alive
-			// i = 0
+		if i == len(lb.servers) { // if all servers are down
+			i = 0
 			return nil
 		}
 		server = lb.servers[i]
@@ -36,18 +42,18 @@ func (lb *LCLoadBalancer) GetNextAvailableServer() server.Servers {
 			server = backend
 		}
 	}
+
 	return server
 }
 
 func (lb *LCLoadBalancer) ServeProxy(w http.ResponseWriter, r *http.Request) {
 	targetServer := lb.GetNextAvailableServer()
-
 	if targetServer == nil { // can redirect to a fallback server
 		http.Error(w, "Service Unavailable: No healthy servers available", http.StatusServiceUnavailable)
+		utils.LogNewError(fmt.Sprintf("Request Dropped %v: No healthy servers available", lb.domain))
+		return
 	}
-	targetServer.IncrementConnections()
-	// fmt.Println(targetServer.Address())
-	// fmt.Println("Request forwarded to:", targetServer.Address())
+	go targetServer.IncrementConnections()
 	targetServer.Serve(w, r)
-	targetServer.DecrementConnections()
+	go targetServer.DecrementConnections()
 }

@@ -11,7 +11,9 @@ var Cfgs Config
 const configurations = "./config.yml"
 
 type Config struct {
-	Services []Service `yaml:"services"`
+	API_PORT    int       `yaml:"api_port"`
+	Listen_PORT int       `yaml:"listen_port"`
+	Services    []Service `yaml:"services"`
 }
 
 type Service struct {

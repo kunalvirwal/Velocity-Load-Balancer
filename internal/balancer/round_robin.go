@@ -6,14 +6,15 @@ import (
 	"sync"
 
 	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/server"
+	"github.com/kunalvirwal/Velocity-Load-Balancer/internal/utils"
 )
 
-var mu sync.Mutex
-
 type RRLoadBalancer struct {
+	domain          string
 	port            int
 	RoundRobinCount int //server index to get next the request
 	servers         []server.Servers
+	mu              sync.Mutex
 }
 
 func (lb *RRLoadBalancer) Port() int {
@@ -26,29 +27,32 @@ func (lb *RRLoadBalancer) GetAlgorythm() string {
 
 func (lb *RRLoadBalancer) GetNextAvailableServer() server.Servers {
 
-	// for _, name := range lb.servers {
-	// 	// fmt.Println(name.Address(), name.IsAlive())
-	// }
-
-	mu.Lock()
+	lb.mu.Lock()
+	defer lb.mu.Unlock()
 	server := lb.servers[(lb.RoundRobinCount)%len(lb.servers)]
-	// fmt.Println(*lb)
+	i := 0
 	for !server.IsAlive() {
-		// fmt.Println(server.IsAlive())
+		i++
+		if i == len(lb.servers) { // if all servers are down
+			return nil
+		}
 		lb.RoundRobinCount++
 		server = lb.servers[(lb.RoundRobinCount)%len(lb.servers)]
-	} // TODO: Implement gracefull 503 responses if all servers down
+	}
 	lb.RoundRobinCount++
-
-	mu.Unlock()
 
 	return server
 }
 
 func (lb *RRLoadBalancer) ServeProxy(w http.ResponseWriter, r *http.Request) {
 	targetServer := lb.GetNextAvailableServer()
+	if targetServer == nil { // can redirect to a fallback server
+		http.Error(w, "Service Unavailable: No healthy servers available", http.StatusServiceUnavailable)
+		utils.LogNewError(fmt.Sprintf("Request Dropped %v: No healthy servers available", lb.domain))
+		return
+	}
 	go targetServer.IncrementConnections()
-	fmt.Println("Request forwarded to:", targetServer.Address())
+	utils.Log(fmt.Sprintf("Request forwarded to: %v", targetServer.Address()))
 	targetServer.Serve(w, r)
 	go targetServer.DecrementConnections()
 

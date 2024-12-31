@@ -17,6 +17,9 @@ It currently has Health Checks and removal of servers for if the server is down 
 
 # Features of a LoadBalancer:
 
+✅: Implemented  
+🚧: Under active development
+
 ✅ It should be software based  
 ✅ It should be written in Golang ( use Go routines for parallelism)  
 ✅ It should be able to manage all local and global servers and containers  
@@ -28,10 +31,10 @@ It currently has Health Checks and removal of servers for if the server is down 
 ✅ It should have:  
 	1) round robin (normal and weighted) :Done   
 	2) Least Connections :Done  
-✅ Health Checks for if the server is down [ 🚧HTTPS pings or 🚧health endpints or ✅TCP connections ] :Done  
-🚧Rate limiting [ IP address and end point ]  
+✅ Health Checks for if the server is down [ ✅TCP connections or HTTPS pings or health endpints ] :Done  
+Rate limiting [ IP address and end point ]  
 Hot Addition and removal of servers [ ✅Via HealthChecks and 🚧Via REST API interface (we'll see) ]  
-🚧Loging and monitoring ( access logs like response times, status codes,... can store into a database like a mongo alpine container)  
+✅ Loging and monitoring ( access logs like forwards, healthchecks, request drops, status codes,... 🚧can store into a database like a mongo alpine container)  
 
 
 ## 🚧Phase II :Prod level  
@@ -69,11 +72,11 @@ Load_Balancer/
 │   │   └── healthcheck.go        # Health checking logic for backends  
 │   ├── server/  
 │   │   ├── server.go             # Server logic, like adding, removing, and selecting servers  
-│   │   └── 🚧docker_server.go      # Server handling for Docker containers  
+│   │   └── 🚧docker_server.go    # Server handling for Docker containers  
 │   │   └── baremetal_server.go   # Server handling for bare metal servers  
 │   └── utils/    
 │       ├── utils.go			  # Utility functions like Error Handling etc.    
-│       └── 🚧logger.go             # Utility functions like logging  
+│       └── logger.go             # Utility functions like logging  
 ├── 🚧pkg/    
 │   └── api/    
 │       └── handler.go            # API handler to manage the load balancer (optional)  
@@ -93,7 +96,7 @@ To Run the Load Balancer
   
 For Hot Realoading while development use:  
 
-`CompileDaemon -build="go build -o main ./cmd/main.go" -command="./main"`  
+`CompileDaemon -build="go build -o main ." -command="./main"`  
 
 For starting testing server on localhost after creating .env:  
 
@@ -109,7 +112,14 @@ For testing the load balancer use:
   
 Tip: To test multi-redirection modify your `/etc/hosts` to have many custom domain names to mimic different services and point them all to Velocity port 8000 at localhost  
 
-# Testing
+# Testing and Examples
+
+<p align=center>
+Logging
+</p>
+
+![Logging](./Readme_Assets/Logging.png)   
+
 
 <p align=center>
 Round Robin Algorythm tests

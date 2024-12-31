@@ -22,17 +22,19 @@ type LoadBalancers interface {
 	GetAlgorythm() string
 }
 
-// create a new load baklancer instance
-func CreateLoadBalancers(algorythm string, port int, servers []server.Servers) LoadBalancers {
+// create a new load balancer instance
+func CreateLoadBalancer(domain string, algorythm string, port int, servers []server.Servers) LoadBalancers {
 
 	if algorythm == utils.RRenum {
 		return &RRLoadBalancer{
+			domain:          domain,
 			port:            port,
 			RoundRobinCount: 0,
 			servers:         servers,
 		}
 	} else if algorythm == utils.LCenum {
 		return &LCLoadBalancer{
+			domain:  domain,
 			port:    port,
 			servers: servers,
 		}
