@@ -6,7 +6,6 @@
 			#	|___/\__/_/\___/\__/_/\__/\_, /		   #  
 			#	                         /___/ 		   #  
 			####################################################  
-
 ```
 
 # About
@@ -37,7 +36,7 @@ It currently has Health Checks and removal of servers for if the server is down 
 Rate limiting [ IP address and end point ]  
 
 
-## 🚧Phase II :Prod level  
+## 🚧Phase II :Prod level orchestration  
 look up auto scaling  
 IP blacklisting  
 Request queuing  
@@ -48,7 +47,7 @@ It could also have:
 	1) Sticky Round Robin  
 	2) IP/Url Hash  
 
-## 🚧Phase III :Service level  
+## 🚧Phase III :Service level monitoring  
 Dashboard for load visualization or can integrate Prometheus  
 Reverse proxy Graceful Shutdown  
 Timeouts  

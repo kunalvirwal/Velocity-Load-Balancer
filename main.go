@@ -7,7 +7,7 @@ import (
 func initServices() {
 	go initHealthCheck()
 	go initListner()
-	// go initAPI()
+	go initAPI()
 }
 
 func main() {
