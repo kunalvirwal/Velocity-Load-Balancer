@@ -10,9 +10,9 @@
 
 # About
 
-This is a project to create a load balancer in Golang that can manage local and global servers and containers named Velocity. It should have Round Robin and Least Connections balancing algorythms and should be configurable via yaml.  
+This is a project to create a load balancer in Golang that can manage local and global servers and containers named Velocity. It should have Round Robin and Least Connections balancing algorithms and should be configurable via yaml.  
 This project was started in my 3rd semester and is an ambitious and a great learning project.  
-It currently has Health Checks and removal of servers for if the server is down is configurable via yaml file to route requests to multiple servers for different applications implementing uniquely different balancing algorythms for each one.
+It currently has Health Checks and removal of servers for if the server is down is configurable via yaml file to route requests to multiple servers for different applications implementing uniquely different balancing algorithms for each one.
 
 # Features of a LoadBalancer:
 
@@ -90,7 +90,7 @@ Load_Balancer/
   
 To Run the Load Balancer  
 
-`go run ./cmd/main.go`  
+`go run .`  
   
 For Hot Realoading while development use:  
 
@@ -120,16 +120,16 @@ Logging
 
 
 <p align=center>
-Round Robin Algorythm tests
+Round Robin Algorithm tests
 </p>
 
 ![Round Robin Algorythm tests](./Readme_Assets/RoundRobin.png)   
 
 <p align=center>  
-Least Connections Algorythm tests  
+Least Connections Algorithm tests  
 </p>
 
-![Least Connections Algorythm tests](./Readme_Assets/LeastConnections.png)  
+![Least Connections Algorithm tests](./Readme_Assets/LeastConnections.png)  
 
 <p align=center>
 Made with ❤️ by Kunal
